@@ -1,0 +1,19 @@
+[setting]
+debug_mode = off
+retry_max_num = 10000
+range_diff_cap = 5
+
+
+[text_id]
+general = ***
+alpha = ***
+bravo = ***
+
+[access_token]
+token = ***
+
+[user_id]
+host = ***
+
+
+
