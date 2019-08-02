@@ -1,5 +1,5 @@
 [setting]
-debug_mode = off
+debug_mode = on
 retry_max_num = 10000
 range_diff_cap = 5
 

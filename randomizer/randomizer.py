@@ -5,34 +5,25 @@ import random
 import discord
 import sys
 import copy
+import os
+
 from configparser import ConfigParser
 from pprint import pprint
 
-config = ConfigParser()
-config.read('./randomizer.ini')
+def getFilePathFromCurrenDir(file_name):
+    return os.path.dirname(__file__) + "/" + file_name
 
 def readFileToList(path):
+    full_path = getFilePathFromCurrenDir(path)
     list = []
-    f = open(path, 'r')
-    for line in f :
+    f = open(full_path, 'r', encoding='utf-8')
+    for line in f:
         line = line.strip()
         if line.startswith('#'):
             continue
         if len(line) == 0:
             continue
-    f.close()
-    return list
-
-def readWeaponFileToList(weapon_type):
-    list = []
-    path = "./weapons/" + weapon_type + "_file.txt"
-    f = open(path, 'r')
-    for line in f :
-        line = line.strip()
-        if line.startswith('#') :
-            continue
-        if len(line) == 0:
-            continue
+        list.append(line)
     f.close()
     return list
 
@@ -41,9 +32,11 @@ def getWeponDict():
     weapon_type_list = ["blaster", "charger", "manuver", "roller_brush", "shelter", "shooter", "shooter2", "slosher", "splatling"]
     for weapon_type in weapon_type_list :
         weapon_dict[weapon_type] = {}
-        path = "./weapons/" + weapon_type + "_file.txt"
-        f = open(path, 'r')
-        for line in f :
+        path = "weapons/" + weapon_type + "_file.txt"
+        full_path = getFilePathFromCurrenDir(path)
+        f = open(path, 'r', encoding='utf-8')
+        for line in f:
+            line = line.strip()
             if line.startswith('#'):
                 continue
             if len(line) == 0:
@@ -78,7 +71,7 @@ def setUsersWeapon(weapon_type_list, weapon_dict, users):
 def getWeaponTotalRage(users, weapon_dict):
     total_range = 0
     for user in users:
-        total_range = total_range + weapon_dict[user]["range"]
+        total_range = total_range + int(weapon_dict[user]["range"])
     return total_range
 
 def removeWeaponFromTypeList(weapon_type_list, weapon_dict, users):
@@ -90,26 +83,28 @@ def choiceTeamWeapon(user_weapon_list):
     selected_weapon = []
     for i in range(len(user_weapon_list)):
         duplicated_weapon = True
-        while duplicated_weapon :
+        while duplicated_weapon:
             weapon = random.choice(user_weapon_list[i])
             if weapon not in selected_weapon :
                 duplicated_weapon = False
         selected_weapon.append(weapon)
     return selected_weapon
 
-def selectSmallDiffRangeWeapons(weapon_type_list, weapon_dict, users, another_range_total)
+def selectSmallDiffRangeWeapons(weapon_type_list, weapon_dict, users, another_range_total):
     weapon_selecting = True
-    weapon_dict = {}
-    for i in range(config["setting"]["retry_max_num"]):
-        selected_weapon_type = random.sample(weapon_type_list)
-        weapon_dict = setUsersWeapon(selected_weapon_type, weapon_dict, users)
-        weapon_range_total = getWeaponTotalRage(users, weapon_dict)
+    team_weapon_dict = {}
+    for i in range(int(config["setting"]["retry_max_num"])):
+        selected_weapon_type = []
+        for user_type_list in weapon_type_list :
+            weapon_type = random.choice(user_type_list)
+            selected_weapon_type.append(weapon_type)
+        team_weapon_dict = setUsersWeapon(selected_weapon_type, weapon_dict, users)
+        weapon_range_total = getWeaponTotalRage(users, team_weapon_dict)
         diff = abs(another_range_total - weapon_range_total)
-        if diff < config["setting"]["range_diff_cap"]:
+        if diff < int(config["setting"]["range_diff_cap"]):
             weapon_selecting = False
             break
-    return weapon_dict, weapon_selecting
-
+    return team_weapon_dict, weapon_selecting
 
 def getWeaponSet(weapon_dict, alpha_users, bravo_users):
     weapon_set = {}
@@ -124,18 +119,20 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
         for bravo_user in bravo_users:
             bravo_weapon_type_list.append(copy.deepcopy(weapon_type_list))
 
-        selected_weapon_type_list = random.sample(weapon_type_list)
+        selected_weapon_type_list = random.sample(weapon_type_list, 4)
         alpha_weapon_dict = setUsersWeapon(selected_weapon_type_list, weapon_dict, alpha_users)
         alpha_weapon_range_total = getWeaponTotalRage(alpha_users, alpha_weapon_dict)
 
         bravo_weapon_dict, weapon_selecting = \
-            selectSmallDiffRangeWeapons(weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
+            selectSmallDiffRangeWeapons(bravo_weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
         if weapon_selecting:
             continue
         alpha_weapon_type_list = \
             removeWeaponFromTypeList(alpha_weapon_type_list,alpha_weapon_dict,alpha_users)
         bravo_weapon_type_list = \
             removeWeaponFromTypeList(bravo_weapon_type_list,bravo_weapon_dict,bravo_users)
+        weapon_set["1st"] = {}
+        weapon_set["1st"] = {}
         weapon_set["1st"]["alpha"] = alpha_weapon_dict
         weapon_set["1st"]["bravo"] = bravo_weapon_dict
 
@@ -146,13 +143,15 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
         alpha_weapon_range_total = getWeaponTotalRage(alpha_users, alpha_weapon_dict)
 
         bravo_weapon_dict, weapon_selecting = \
-            selectSmallDiffRangeWeapons(weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
+            selectSmallDiffRangeWeapons(bravo_weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
         if weapon_selecting:
             continue
         alpha_weapon_type_list = \
             removeWeaponFromTypeList(alpha_weapon_type_list,alpha_weapon_dict,alpha_users)
         bravo_weapon_type_list = \
             removeWeaponFromTypeList(bravo_weapon_type_list,bravo_weapon_dict,bravo_users)
+        weapon_set["2nd"] = {}
+        weapon_set["2nd"] = {}
         weapon_set["2nd"]["alpha"] = alpha_weapon_dict
         weapon_set["2nd"]["bravo"] = bravo_weapon_dict
 
@@ -162,13 +161,15 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
         alpha_weapon_range_total = getWeaponTotalRage(alpha_users, alpha_weapon_dict)
 
         bravo_weapon_dict, weapon_selecting = \
-            selectSmallDiffRangeWeapons(weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
+            selectSmallDiffRangeWeapons(bravo_weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
         if weapon_selecting:
             continue
         alpha_weapon_type_list = \
             removeWeaponFromTypeList(alpha_weapon_type_list,alpha_weapon_dict,alpha_users)
         bravo_weapon_type_list = \
             removeWeaponFromTypeList(bravo_weapon_type_list,bravo_weapon_dict,bravo_users)
+        weapon_set["3rd"] = {}
+        weapon_set["3rd"] = {}
         weapon_set["3rd"]["alpha"] = alpha_weapon_dict
         weapon_set["3rd"]["bravo"] = bravo_weapon_dict
 
@@ -178,13 +179,15 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
         alpha_weapon_range_total = getWeaponTotalRage(alpha_users, alpha_weapon_dict)
 
         bravo_weapon_dict, weapon_selecting = \
-            selectSmallDiffRangeWeapons(weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
+            selectSmallDiffRangeWeapons(bravo_weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
         if weapon_selecting:
             continue
         alpha_weapon_type_list = \
             removeWeaponFromTypeList(alpha_weapon_type_list,alpha_weapon_dict,alpha_users)
         bravo_weapon_type_list = \
             removeWeaponFromTypeList(bravo_weapon_type_list,bravo_weapon_dict,bravo_users)
+        weapon_set["4th"] = {}
+        weapon_set["4th"] = {}
         weapon_set["4th"]["alpha"] = alpha_weapon_dict
         weapon_set["4th"]["bravo"] = bravo_weapon_dict
 
@@ -194,9 +197,11 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
         alpha_weapon_range_total = getWeaponTotalRage(alpha_users, alpha_weapon_dict)
 
         bravo_weapon_dict, weapon_selecting = \
-            selectSmallDiffRangeWeapons(weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
+            selectSmallDiffRangeWeapons(bravo_weapon_type_list,weapon_dict,bravo_users,alpha_weapon_range_total)
         if weapon_selecting:
             continue
+        weapon_set["5th"] = {}
+        weapon_set["5th"] = {}
         weapon_set["5th"]["alpha"] = alpha_weapon_dict
         weapon_set["5th"]["bravo"] = bravo_weapon_dict
 
@@ -206,20 +211,19 @@ def getWeaponSet(weapon_dict, alpha_users, bravo_users):
 def getMemberList(name):
     # 1行目にチーム名
     # 2行目以降にメンバー名画列挙されている想定
-    path = "./teams/" + name + ".txt"
+    path = "teams/" + name + ".txt"
     team_name_members = readFileToList(path)
     team_name = team_name_members[0]
     members = team_name_members[1:]
     return team_name, members
 
 def run_randomizer(alpha_name, bravo_name):
-    global result_set
     result_set = {}
     rule_list = ["fess","area","clam", "rainmaker", "tower"]
     random.shuffle(rule_list)
-    stage_all_list = readFileToList("./stage.txt")
-    stage_list = random.sample(stage_all_list,5)
-    fess_stage_list = readFileToList("./fess_stage.txt")
+    stage_all_list = readFileToList("stage.txt")
+    stage_list = random.sample(stage_all_list, 5)
+    fess_stage_list = readFileToList("fess_stage.txt")
     fess_stage = random.choice(fess_stage_list)
     alpha_name, alpha_users = getMemberList(alpha_name)
     bravo_name, bravo_users = getMemberList(bravo_name)
@@ -239,33 +243,41 @@ def run_randomizer(alpha_name, bravo_name):
         result_set[num_list[i]]["alpha"] = weapon_set[num_list[i]]["alpha"]
         result_set[num_list[i]]["bravo"] = weapon_set[num_list[i]]["bravo"]
 
-
-    if config["setting"]["debug_mod"] == "on":
+    if config["setting"]["debug_mode"] == "on":
         pprint(result_set)
 
     ### 出力形式後で整備
     return
 
 
-if config["setting"]["debug_mod"] == "on":
+
+ini_file = getFilePathFromCurrenDir("randomizer.ini")
+if not os.path.exists(ini_file) :
+    print("Can't find randoizer.ini file : " + ini_file)
+    sys.exit(1)
+
+config = ConfigParser()
+config.read(ini_file)
+
+if config["setting"]["debug_mode"] == "on":
     run_randomizer("teamA", "teamB")
-    sys.exit()
+    sys.exit(0)
 
-@client.event
-async def on_read():
-    print('Lgged in as')
-    print(client.user.name)
-    print(client.user.id)
-    print('--------')
-
-@client.event
-async def on_message(message):
-    # 入力されたメッセージに従って制御
-    if message.content.startswith('reset,'):
-        if message.channel.id == config['text_id']['general'] :
-            if message.author.id == config['user_id']['host'] :
-                contents = message.content.split(",")
-                reply = 'これはtest です'
-                await client.send_message(mesage.channel, reply)
-
-client.run(config['access_token']['token'])
+#@client.event
+#async def on_read():
+#    print('Lgged in as')
+#    print(client.user.name)
+#    print(client.user.id)
+#    print('--------')
+#
+#@client.event
+#async def on_message(message):
+#    # 入力されたメッセージに従って制御
+#    if message.content.startswith('reset,'):
+#        if message.channel.id == config['text_id']['general'] :
+#            if message.author.id == config['user_id']['host'] :
+#                contents = message.content.split(",")
+#                reply = 'これはtest です'
+#                await client.send_message(mesage.channel, reply)
+#
+#client.run(config['access_token']['token'])
