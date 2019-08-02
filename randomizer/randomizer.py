@@ -217,6 +217,22 @@ def getMemberList(name):
     members = team_name_members[1:]
     return team_name, members
 
+def getOutMessage(result_set):
+    alpha_text = ""
+    bravo_text = ""
+    rule_text = {"fess":"フェス(ナワバリ)", "area":"ガチエリア",
+                 "clam":"ガチアサリ","rainmaker":"ガチホコ","tower":"ガチヤグラ"}
+    for game in result_set :
+        header = "\n" + game + " game : " + rule_text[result_set[game]['rule']] \
+               + " : " + result_set[game]['stage'] + "\n"
+        alpha_text = alpha_text + header
+        bravo_text = bravo_text + header
+        for user in result_set[game]['alpha'] :
+            alpha_text = alpha_text + user + " : " + result_set[game]['alpha'][user]['name'] + "\n"
+        for user in result_set[game]['bravo'] :
+            bravo_text = bravo_text + user + " : " + result_set[game]['bravo'][user]['name'] + "\n"
+    return alpha_text, bravo_text
+
 def run_randomizer(alpha_name, bravo_name):
     result_set = {}
     rule_list = ["fess","area","clam", "rainmaker", "tower"]
@@ -246,10 +262,13 @@ def run_randomizer(alpha_name, bravo_name):
     if config["setting"]["debug_mode"] == "on":
         pprint(result_set)
 
-    ### 出力形式後で整備
-    return
+    alpha_text, bravo_text = getOutMessage(result_set)
+    return alpha_text, bravo_text
 
-
+def getTeamTextChannelIdFromName(team_name):
+    # チームとチャネルの対応表を列挙
+    team_channel = {"teamA":"team1", "teamB":"team2"}
+    return config['text_id'][team_channel[team_name]]
 
 ini_file = getFilePathFromCurrenDir("randomizer.ini")
 if not os.path.exists(ini_file) :
@@ -258,26 +277,33 @@ if not os.path.exists(ini_file) :
 
 config = ConfigParser()
 config.read(ini_file)
+client = discord.Client()
 
 if config["setting"]["debug_mode"] == "on":
     run_randomizer("teamA", "teamB")
     sys.exit(0)
 
-#@client.event
-#async def on_read():
-#    print('Lgged in as')
-#    print(client.user.name)
-#    print(client.user.id)
-#    print('--------')
-#
-#@client.event
-#async def on_message(message):
-#    # 入力されたメッセージに従って制御
-#    if message.content.startswith('reset,'):
-#        if message.channel.id == config['text_id']['general'] :
-#            if message.author.id == config['user_id']['host'] :
-#                contents = message.content.split(",")
-#                reply = 'これはtest です'
-#                await client.send_message(mesage.channel, reply)
-#
-#client.run(config['access_token']['token'])
+@client.event
+async def on_read():
+    print('Lgged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print('--------')
+    msg = "test"
+    server = client.get_server(config['server_id']['odajun_box'])
+    bot_channel = server.get_channel(config['text_id']['bot_channel'])
+    await client.send_message(bot_channel, msg)
+
+@client.event
+async def on_message(message):
+    # 入力されたメッセージに従って制御
+    if message.content.startswith('reset,'):
+        if message.channel.id == config['text_id']['bot_channel']:
+            contents = message.content.split(",")
+            alpha_msg, bravo_msg = run_randomizer(contents[1],contents[2])
+            alpha_id = getTeamTextChannelIdFromName(contents[1])
+            bravo_id = getTeamTextChannelIdFromName(contents[2])
+            await client.send_message(client.get.channel(alpha_id),alpha_msg)
+            await client.send_message(client.get.channel(bravo_id),bravo_msg)
+
+client.run(config['access_token']['token'])
