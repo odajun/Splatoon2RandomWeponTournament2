@@ -1,6 +1,8 @@
 # 第2回 Splatoon2RandomWeponTournament
 第2回 Splatoon2 ランダム武器大会に関する説明やランダマイザーのコード置き場
 
+![samune](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/randamubukitaikai.jpg)
+
 # 大会概要
 
 - 主催者：odajun
