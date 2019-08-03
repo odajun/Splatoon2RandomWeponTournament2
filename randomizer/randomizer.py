@@ -11,7 +11,7 @@ from configparser import ConfigParser
 from pprint import pprint
 
 def getFilePathFromCurrenDir(file_name):
-    return os.path.dirname(__file__) + "/" + file_name
+    return os.path.dirname(os.path.abspath(__file__)) + "/" + file_name
 
 def readFileToList(path):
     full_path = getFilePathFromCurrenDir(path)
@@ -94,10 +94,7 @@ def selectSmallDiffRangeWeapons(weapon_type_list, weapon_dict, users, another_ra
     weapon_selecting = True
     team_weapon_dict = {}
     for i in range(int(config["setting"]["retry_max_num"])):
-        selected_weapon_type = []
-        for user_type_list in weapon_type_list :
-            weapon_type = random.choice(user_type_list)
-            selected_weapon_type.append(weapon_type)
+        selected_weapon_type = choiceTeamWeapon(weapon_type_list)
         team_weapon_dict = setUsersWeapon(selected_weapon_type, weapon_dict, users)
         weapon_range_total = getWeaponTotalRage(users, team_weapon_dict)
         diff = abs(another_range_total - weapon_range_total)
@@ -217,6 +214,16 @@ def getMemberList(name):
     members = team_name_members[1:]
     return team_name, members
 
+def getUserWeaponText(team_name, game_result_set):
+    total_range = 0
+    text = ""
+    for user in game_result_set[team_name] :
+        weapon_range = int(game_result_set[team_name][user]['range'])
+        total_range = total_range + weapon_range
+        text = text + user + " : " + game_result_set[team_name][user]['name'] + ":" + str(weapon_range) + "\n"
+    text = text + "合計射程：" + str(total_range) + "\n"
+    return text
+
 def getOutMessage(result_set):
     alpha_text = ""
     bravo_text = ""
@@ -225,12 +232,8 @@ def getOutMessage(result_set):
     for game in result_set :
         header = "\n" + game + " game : " + rule_text[result_set[game]['rule']] \
                + " : " + result_set[game]['stage'] + "\n"
-        alpha_text = alpha_text + header
-        bravo_text = bravo_text + header
-        for user in result_set[game]['alpha'] :
-            alpha_text = alpha_text + user + " : " + result_set[game]['alpha'][user]['name'] + "\n"
-        for user in result_set[game]['bravo'] :
-            bravo_text = bravo_text + user + " : " + result_set[game]['bravo'][user]['name'] + "\n"
+        alpha_text = alpha_text + header + getUserWeaponText('alpha', result_set[game])
+        bravo_text = bravo_text + header + getUserWeaponText('bravo', result_set[game])
     return alpha_text, bravo_text
 
 def run_randomizer(alpha_name, bravo_name):
@@ -284,26 +287,27 @@ if config["setting"]["debug_mode"] == "on":
     sys.exit(0)
 
 @client.event
-async def on_read():
+async def on_ready():
     print('Lgged in as')
     print(client.user.name)
     print(client.user.id)
     print('--------')
-    msg = "test"
-    server = client.get_server(config['server_id']['odajun_box'])
-    bot_channel = server.get_channel(config['text_id']['bot_channel'])
-    await client.send_message(bot_channel, msg)
+    msg = "ランダマイザー起動中"
+    bot_channel = client.get_channel(int(config['text_id']['bot_channel']))
+    await bot_channel.send(msg)
 
 @client.event
 async def on_message(message):
     # 入力されたメッセージに従って制御
     if message.content.startswith('reset,'):
-        if message.channel.id == config['text_id']['bot_channel']:
+        if message.channel.id == int(config['text_id']['bot_channel']):
             contents = message.content.split(",")
             alpha_msg, bravo_msg = run_randomizer(contents[1],contents[2])
-            alpha_id = getTeamTextChannelIdFromName(contents[1])
-            bravo_id = getTeamTextChannelIdFromName(contents[2])
-            await client.send_message(client.get.channel(alpha_id),alpha_msg)
-            await client.send_message(client.get.channel(bravo_id),bravo_msg)
+            alpha_id = int(getTeamTextChannelIdFromName(contents[1]))
+            bravo_id = int(getTeamTextChannelIdFromName(contents[2]))
+            alpha_channel = client.get_channel(alpha_id)
+            bravo_channel = client.get_channel(bravo_id)
+            await alpha_channel.send(alpha_msg)
+            await bravo_channel.send(bravo_msg)
 
 client.run(config['access_token']['token'])
