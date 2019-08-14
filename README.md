@@ -35,7 +35,9 @@
 # 参加チームとメンバー
 
 - メンバーやチーム名が変更される可能性があります
-(後日更新)
+- 以下の図は8/14 22時時点でご連絡いただいているもの
+
+![init_ver](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/random_2nd_team_list_ver1.png)
 
 
 # 大会のハイライト, 配信アーカイブ動画
