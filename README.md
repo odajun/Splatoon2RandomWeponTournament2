@@ -85,7 +85,7 @@ NGの例：わかばシューター、もみじシューター、スパッタリ
 #### 武器種
 以下のテーブルの内容で種類分けしています(カッコ内は武器選びで使用している武器の参考射程を示す)
 
-![weapon_type](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/weapon_type_2nd.png "武器種分類一覧表")
+![weapon_type](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/randomizer/weapon_type_2nd_ver2.png "武器種分類一覧表")
 
 ### 注意事項
 
