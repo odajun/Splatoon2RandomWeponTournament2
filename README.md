@@ -141,6 +141,7 @@ NGの例：わかばシューター、もみじシューター、スパッタリ
 # 主催者情報
 - Twitter：https://twitter.com/TalesOfOdajun
   - DM による大会に関する連絡をするかもしれないので、代表者はフォローをお願いします
+  - 大会に関するTweet については「#Splatoon2_ランダム武器大会」のハッシュタグを使用します
 - niconico動画：https://www.nicovideo.jp/user/8669540
 - Youtube：https://www.youtube.com/channel/UCCLyCW6NlUG2iPvmaoWq98g
 
