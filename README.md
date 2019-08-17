@@ -18,16 +18,19 @@
 
 当日の進行状況により前後しますのでご了承ください
 
-2並列で進行予定です。odajun が観戦として加わっていない対戦については結果報告をお願いします
-
-(後日公開)
+![schedule](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/time_schedule.png)
 
 # 大会結果
 (大会終了後更新)
 
-
 # トーナメント表
-(後日更新)
+
+![トーナメント表](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/init_tournament.png)
+- [トーナメント表(]https://the-tournament.jp/tournaments/s20XiECnqaGhWF9dNiJ7)
+- [裏トーナメント表](https://the-tournament.jp/tournaments/nHNw1IbE2CkskvBiVTgZ)
+
+![試合情報](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/game_detail_ver2.png)
+
 
 # 各バトルで選択された武器一覧
 (大会終了後更新)
@@ -35,9 +38,9 @@
 # 参加チームとメンバー
 
 - メンバーやチーム名が変更される可能性があります
-- 以下の図は8/15 22時時点でご連絡いただいているもの
+- 以下の図は8/16 募集締め切り時点でのもの
 
-![init_ver](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/random_2nd_team_list_ver2.png)
+![finishd_version](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/random_2nd_team_list_ver3.png)
 
 
 # 大会のハイライト, 配信アーカイブ動画
@@ -97,7 +100,7 @@ NGの例：わかばシューター、もみじシューター、スパッタリ
 - 通信速度に極端の差がある
 - ランダマイザーによる武器選択に従わない
 
-# 募集要項
+# 募集要項(締め切りました)
 
 ## 参加条件
 
@@ -120,7 +123,7 @@ NGの例：わかばシューター、もみじシューター、スパッタリ
 - 最大参加チーム数：16
 - ゲーム内アカウントとは任天堂アカウント名を指します
 - 一度出したものから変更することもできますので、その際は大会前日までにご連絡ください
-- 申込み期日は 8/15
+- 申込み期日は 8/16
 - TwitterのDMか[イカナカマ](https://ikanakama.ink/events/7242)よりご応募ください
 
 
