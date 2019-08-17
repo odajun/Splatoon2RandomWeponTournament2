@@ -26,7 +26,7 @@
 # トーナメント表
 
 ![トーナメント表](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/init_tournament.png)
-- [トーナメント表(]https://the-tournament.jp/tournaments/s20XiECnqaGhWF9dNiJ7)
+- [トーナメント表](https://the-tournament.jp/tournaments/s20XiECnqaGhWF9dNiJ7)
 - [裏トーナメント表](https://the-tournament.jp/tournaments/nHNw1IbE2CkskvBiVTgZ)
 
 ![試合情報](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/game_detail_ver2.png)
