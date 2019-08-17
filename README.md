@@ -21,19 +21,26 @@
 ![schedule](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/time_schedule_ver2.png)
 
 # 大会結果
-(大会終了後更新)
+
+- 優勝：52こむぎ
+- 準優勝：機械で割った卵は一味違いますねー
+- 3位：『Revenge of losers』
+- 4位：楽しく楽しく♪
+
+- 裏トーナメント優勝：はこ
+- 裏トーナメント準優勝：バーニングキャッチ
+- 裏トーナメント3位：Clione
+
 
 # トーナメント表
 
-![トーナメント表](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/init_tournament.png)
+![トーナメント表](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/s20XiECnqaGhWF9dNiJ7%20(1).png)
+![裏トーナメント表](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/nHNw1IbE2CkskvBiVTgZ.png)
 - [トーナメント表](https://the-tournament.jp/tournaments/s20XiECnqaGhWF9dNiJ7)
 - [裏トーナメント表](https://the-tournament.jp/tournaments/nHNw1IbE2CkskvBiVTgZ)
 
-![試合情報](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/game_detail_ver2.png)
+![試合情報](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/game_result_detail.png)
 
-
-# 各バトルで選択された武器一覧
-(大会終了後更新)
 
 # 参加チームとメンバー
 
@@ -76,7 +83,6 @@
 - 1試合において(5バトル中で)、1人が同じ武器種を複数回持つことはない
 - 1バトル中、1チーム内で同じ武器種が複数選ばられることはない
 - 1バトル中、チーム間の武器合計射程差は5未満となるように武器を選出
-- チャージャーのスコープ有り無しは選択可(射程が変わりますが中間点を武器射程として設定し計測)
 
 ```
 OKの例：わかばシューター、スプラチャージャー、スパッタリー、ロングブラスター
