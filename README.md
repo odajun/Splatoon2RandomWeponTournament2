@@ -18,7 +18,7 @@
 
 当日の進行状況により前後しますのでご了承ください
 
-![schedule](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/time_schedule.png)
+![schedule](https://github.com/odajun/Splatoon2RandomWeponTournament2/blob/master/time_schedule_ver2.png)
 
 # 大会結果
 (大会終了後更新)
